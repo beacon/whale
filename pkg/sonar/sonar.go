@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -52,7 +51,6 @@ func (c *Client) Do(ctx context.Context, method, path string, queries []Query, h
 			path += "&"
 		}
 	}
-	log.Println("DBG - ", method, c.host+path)
 	r, err := http.NewRequest(method, c.host+path, body)
 	if err != nil {
 		return 0, err
