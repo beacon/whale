@@ -6,8 +6,17 @@
 max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
 ```
 
+Temporary:
+
 ```
 sudo sysctl -w vm.max_map_count=262144
+```
+
+Persistent:
+
+```
+sudo echo vm.max_map_count=262144 >> /etc/sysctl.conf
+sudo sysctl  -f /etc/sysctl.conf
 ```
 
 # 运行扫描
@@ -15,7 +24,7 @@ sudo sysctl -w vm.max_map_count=262144
 ```bash
 SONARQUBE_URL=sonar:9000
 SONAR_TOKEN=da360061f7144ce19ae7f8059916728f64be0dfa
-SONAR_PROJECT_KEY=myproject
+SONAR_PROJECT=myproject
 docker run --rm  --net deploy_default \
     -e SONAR_HOST_URL="http://${SONARQUBE_URL}" \
     -e SONAR_LOGIN="${SONAR_TOKEN}" \

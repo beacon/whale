@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // Client to access sonar api
@@ -22,6 +24,9 @@ type Client struct {
 
 // NewClient create new client
 func NewClient(client *http.Client, host, token string) (*Client, error) {
+	if !strings.HasSuffix(host, "/") {
+		host += "/"
+	}
 	return &Client{
 		client: client,
 		host:   host,
@@ -42,11 +47,12 @@ func (c *Client) Do(ctx context.Context, method, path string, queries []Query, h
 	if len(queries) != 0 {
 		path += "?"
 		for _, q := range queries {
-			path += q.Key
+			path += q.Key + "="
 			path += url.QueryEscape(fmt.Sprint(q.Value))
 			path += "&"
 		}
 	}
+	log.Println("DBG - ", method, c.host+path)
 	r, err := http.NewRequest(method, c.host+path, body)
 	if err != nil {
 		return 0, err
@@ -68,6 +74,8 @@ func (c *Client) Do(ctx context.Context, method, path string, queries []Query, h
 	}
 
 	raw, _ := ioutil.ReadAll(resp.Body)
+	// TODO: remove debug
+	ioutil.WriteFile("response.json", raw, 0644)
 
 	if err = json.Unmarshal(raw, dst); err != nil {
 		return resp.StatusCode, fmt.Errorf("%s %s error decoding:%v", method, path, err)
