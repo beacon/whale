@@ -1,4 +1,10 @@
-# whale: Help use sonar properly
+# whale: Comment sonar results in your Pull Request
+
+```
+Why named whale? Because whale uses sonar.
+```
+
+用于将sonarqube扫描结果以评论形式插入到Github/Gitlab等的PR Review中。
 
 # Install
 
